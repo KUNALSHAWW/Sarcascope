@@ -1,0 +1,2 @@
+# Sarcascope
+**Sarcascope** is an intelligent sentiment analysis dashboard that goes beyond traditional sentiment analysis by detecting and accounting for sarcasm in IMDB movie reviews. Unlike conventional sentiment analyzers that might misinterpret sarcastic reviews, Sarcascope identifies sarcastic content and adjusts sentiment scores accordingly, providing more accurate insights into genuine user opinions.
