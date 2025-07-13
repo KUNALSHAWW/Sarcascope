@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState } from 'react';
 import { 
   BarChart3, 
   TrendingUp, 
@@ -17,6 +18,8 @@ import { SarcasmPieChart } from './components/SarcasmPieChart';
 import { TimelineChart } from './components/TimelineChart';
 import { GenreChart } from './components/GenreChart';
 import { SarcasticReviewsTable } from './components/SarcasticReviewsTable';
+import { CSVUpload } from './components/CSVUpload';
+import { AnalysisResults } from './components/AnalysisResults';
 
 import { 
   overallMetrics, 
@@ -26,6 +29,14 @@ import {
 } from './data/analysisData';
 
 function App() {
+  const [uploadedResults, setUploadedResults] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<'demo' | 'upload'>('demo');
+
+  const handleFileProcessed = (results: any) => {
+    setUploadedResults(results);
+    setActiveTab('upload');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
       <Header />
@@ -42,6 +53,42 @@ function App() {
           </p>
         </div>
 
+        {/* Tab Navigation */}
+        <div className="flex justify-center mb-8">
+          <div className="bg-white rounded-lg p-1 shadow-sm border border-slate-200">
+            <button
+              onClick={() => setActiveTab('demo')}
+              className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                activeTab === 'demo'
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Demo Analysis
+            </button>
+            <button
+              onClick={() => setActiveTab('upload')}
+              className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                activeTab === 'upload'
+                  ? 'bg-primary-600 text-white shadow-sm'
+                  : 'text-slate-600 hover:text-slate-900'
+              }`}
+            >
+              Upload Your Data
+            </button>
+          </div>
+        </div>
+
+        {activeTab === 'upload' && (
+          <div className="mb-12">
+            <CSVUpload onFileProcessed={handleFileProcessed} />
+          </div>
+        )}
+
+        {activeTab === 'upload' && uploadedResults ? (
+          <AnalysisResults results={uploadedResults} />
+        ) : activeTab === 'demo' ? (
+          <>
         {/* Key Metrics */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12 animate-slide-up">
           <MetricCard
@@ -192,6 +239,14 @@ function App() {
             </div>
           </div>
         </div>
+          </>
+        ) : activeTab === 'upload' && !uploadedResults ? (
+          <div className="text-center py-12">
+            <p className="text-slate-600 text-lg">
+              Upload a CSV file above to see your personalized sarcasm analysis results
+            </p>
+          </div>
+        ) : null}
       </main>
 
       <Footer />
